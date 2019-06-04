@@ -74,6 +74,7 @@ namespace RealWeb
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Swagger Api");
+                c.RoutePrefix = string.Empty;
             });
             app.UseMvc();
             
