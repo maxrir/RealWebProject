@@ -15,6 +15,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Swashbuckle.AspNetCore.Swagger;
 using Persistence;
 using Persistence.IRepository;
 
@@ -48,6 +49,10 @@ namespace RealWeb
             services.AddTransient<ITransacaoRepository, TransacaoRepository>();
             services.AddTransient(typeof(IBaseRepository<>),typeof(BaseRepository<>));
             //Injecao de dependencia
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info { Title = "Api de Cédulas e Moedas", Version = "v1" });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -63,7 +68,15 @@ namespace RealWeb
             }
 
             app.UseHttpsRedirection();
+            app.UseSwagger();
+
+            // specifying the Swagger JSON endpoint.
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Swagger Api");
+            });
             app.UseMvc();
+            
         }
     }
 }

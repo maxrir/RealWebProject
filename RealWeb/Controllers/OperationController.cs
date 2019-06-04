@@ -12,53 +12,30 @@ namespace RealWeb.Controllers
     [ApiController]
     public class OperationController : ControllerBase
     {
-        // GET api/values
-        [HttpGet]
-        public ActionResult<IEnumerable<string>> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
-
         // GET api/values/5
-        [HttpGet("{vTotal}/{vPago}")]
-        public ActionResult<string> Get([FromServices]IApp application, string vTotal, string vPago)
+        [HttpGet("{valorPago}/{valorTotal}")]
+        public ActionResult<string> Get([FromServices]IApp application, string valorPago, string valorTotal)
         {
             try
             {
                 double _total = 0;
                 double _pago = 0;
 
-                var isTotalValido = double.TryParse(vTotal.Trim().Replace(',', '.'), NumberStyles.Any, CultureInfo.InvariantCulture, out _total);
-                var isValorPagoValido = double.TryParse(vPago.Trim().Replace(',', '.'), NumberStyles.Any, CultureInfo.InvariantCulture, out _pago);
+                var isTotalValido = double.TryParse(valorTotal.Trim().Replace(',', '.'), NumberStyles.Any, CultureInfo.InvariantCulture, out _total);
+                var isValorPagoValido = double.TryParse(valorPago.Trim().Replace(',', '.'), NumberStyles.Any, CultureInfo.InvariantCulture, out _pago);
 
-                if(!isTotalValido || !isValorPagoValido)
-                    return "Formato Inválido";
+                if(!isValorPagoValido)
+                    return "Valor Pago Inválido";
+                if (!isTotalValido)
+                    return "Valor Total Inválido";
 
                 var ret = application.getTroco(_total, _pago);
                 return ret;
             }
             catch (Exception ex)
             {
-                return "Formato Inválido";
+                return "Erro ao Processar a Operação de troco!";
             }
-        }
-
-        // POST api/values
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
-
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
         }
     }
 }
